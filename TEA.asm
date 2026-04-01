@@ -14,8 +14,8 @@ main PROC
 
 	MOV		eax, v0
 	MOV		ebx, v1
-	XOR		edx, edx	; Init edx=0
-	MOV		ecx, 32		; loop runs 32 times
+	XOR		edx, edx		; Init edx=0
+	MOV		ecx, 32			; loop runs 32 times
 
 
 

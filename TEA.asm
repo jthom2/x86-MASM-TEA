@@ -25,45 +25,45 @@ Encrypt:
 ;------------------ v0 = v0 + (((v1 << 4) + k0) XOR (v1 + sum) XOR ((v1 >> 5) + k1))
 	MOV		esi, ebx
 	SHL		esi, 4
-	ADD		esi, key[0]		; esi = ((v1 <<4) + k0)
+	ADD		esi, key[0]		
 
 
 
-	LEA		edi, [ebx + edx] ; edi = (v1 + sum)
+	LEA		edi, [ebx + edx] 
 
 
-	XOR		esi, edi		; esi = (((v1 << 4) + k0) XOR (v1 + sum)
+	XOR		esi, edi		
 
 
 
 	MOV		edi, ebx
 	SHR		edi, 5
-	ADD		edi, key[4]		; edi = ((v1 >> 5) + k1))
+	ADD		edi, key[4]		
 
 
-	XOR		esi, edi		; esi = (((v1 << 4) + k0) XOR (v1 + sum) XOR ((v1 >> 5) + k1))
+	XOR		esi, edi		
 
 
-	ADD		eax, esi		; v0 = v0 (eax) + above (esi)
+	ADD		eax, esi		; v0 encrypted
 
 
 
 ; ------- v1 = v1 + (((v0 << 4) + k2) XOR (v0 + sum) XOR ((v0 >> 5) + k3))
-	MOV		esi, eax		; esi = v0
-	SHL		esi, 4			; esi = (v0 << 4)
-	ADD		esi, key[8]		; esi = ((v0 << 4) + k2)
+	MOV		esi, eax		
+	SHL		esi, 4			
+	ADD		esi, key[8]		
 
 
 	LEA		edi, [eax + edx]; edi = (v0 + sum)
 
-	XOR		esi, edi		; esi = ((v0 << 4) + k2) XOR (v0 + sum)
+	XOR		esi, edi		
 
 
-	MOV		edi, eax		; edi = eax
-	SHR		edi, 5			; edi = (v0 >> 5)
-	ADD		edi, key[12]	; edi = ((v0 >> 5) + k3))
+	MOV		edi, eax		
+	SHR		edi, 5			
+	ADD		edi, key[12]	
 
-	XOR		esi, edi		; esi = (((v0 << 4) + k2) XOR (v0 + sum) XOR ((v0 >> 5) + k3))
+	XOR		esi, edi		
 
 
 	ADD		ebx, esi
@@ -89,16 +89,16 @@ Decrypt:
 
 	MOV		esi, eax
 	SHL		esi, 4
-	ADD		esi, key[8]			; esi = ((v0 << 4) + k2)
+	ADD		esi, key[8]			
 
-	LEA		edi, [eax + edx]	; edi = (v0 + sum)
-	XOR		esi, edi			; esi = ((v0 << 4) + k2) XOR (v0 + sum)
+	LEA		edi, [eax + edx]	
+	XOR		esi, edi			
 
 	MOV		edi, eax
 	SHR		edi, 5
-	ADD		edi, key[12]		; edi = ((v0 >> 5) + k3))
+	ADD		edi, key[12]		
 
-	XOR		esi, edi			; esi = (((v0 << 4) + k2) XOR (v0 + sum) XOR ((vo >> 5) + k3))
+	XOR		esi, edi			
 	SUB		ebx, esi			; v1 decrypted
 
 ; v0 = v0 - (((v1 << 4) + k0) XOR (v1 + sum) XOR ((v1 >> 5) + k1))
@@ -115,7 +115,7 @@ Decrypt:
 	ADD		edi, key[4]
 
 	XOR		esi, edi
-	SUB		eax, esi
+	SUB		eax, esi			; v0 decrypted
 
 
 	SUB		edx, DELTA

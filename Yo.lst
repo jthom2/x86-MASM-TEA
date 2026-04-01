@@ -1,4 +1,4 @@
-Microsoft (R) Macro Assembler Version 14.50.35728.0	    04/01/26 15:07:26
+Microsoft (R) Macro Assembler Version 14.50.35728.0	    04/01/26 15:09:10
 TEA.asm							     Page 1 - 1
 
 
@@ -49,45 +49,45 @@ TEA.asm							     Page 1 - 1
 				;------------------ v0 = v0 + (((v1 << 4) + k0) XOR (v1 + sum) XOR ((v1 >> 5) + k1))
  00000018  8B F3			MOV		esi, ebx
  0000001A  C1 E6 04			SHL		esi, 4
- 0000001D  03 35 00000000 R		ADD		esi, key[0]		; esi = ((v1 <<4) + k0)
+ 0000001D  03 35 00000000 R		ADD		esi, key[0]		
 				
 				
 				
- 00000023  8D 3C 13			LEA		edi, [ebx + edx] ; edi = (v1 + sum)
+ 00000023  8D 3C 13			LEA		edi, [ebx + edx] 
 				
 				
- 00000026  33 F7			XOR		esi, edi		; esi = (((v1 << 4) + k0) XOR (v1 + sum)
+ 00000026  33 F7			XOR		esi, edi		
 				
 				
 				
  00000028  8B FB			MOV		edi, ebx
  0000002A  C1 EF 05			SHR		edi, 5
- 0000002D  03 3D 00000004 R		ADD		edi, key[4]		; edi = ((v1 >> 5) + k1))
+ 0000002D  03 3D 00000004 R		ADD		edi, key[4]		
 				
 				
- 00000033  33 F7			XOR		esi, edi		; esi = (((v1 << 4) + k0) XOR (v1 + sum) XOR ((v1 >> 5) + k1))
+ 00000033  33 F7			XOR		esi, edi		
 				
 				
- 00000035  03 C6			ADD		eax, esi		; v0 = v0 (eax) + above (esi)
+ 00000035  03 C6			ADD		eax, esi		; v0 encrypted
 				
 				
 				
 				; ------- v1 = v1 + (((v0 << 4) + k2) XOR (v0 + sum) XOR ((v0 >> 5) + k3))
- 00000037  8B F0			MOV		esi, eax		; esi = v0
- 00000039  C1 E6 04			SHL		esi, 4			; esi = (v0 << 4)
- 0000003C  03 35 00000008 R		ADD		esi, key[8]		; esi = ((v0 << 4) + k2)
+ 00000037  8B F0			MOV		esi, eax		
+ 00000039  C1 E6 04			SHL		esi, 4			
+ 0000003C  03 35 00000008 R		ADD		esi, key[8]		
 				
 				
  00000042  8D 3C 10			LEA		edi, [eax + edx]; edi = (v0 + sum)
 				
- 00000045  33 F7			XOR		esi, edi		; esi = ((v0 << 4) + k2) XOR (v0 + sum)
+ 00000045  33 F7			XOR		esi, edi		
 				
 				
- 00000047  8B F8			MOV		edi, eax		; edi = eax
- 00000049  C1 EF 05			SHR		edi, 5			; edi = (v0 >> 5)
- 0000004C  03 3D 0000000C R		ADD		edi, key[12]	; edi = ((v0 >> 5) + k3))
+ 00000047  8B F8			MOV		edi, eax		
+ 00000049  C1 EF 05			SHR		edi, 5			
+ 0000004C  03 3D 0000000C R		ADD		edi, key[12]	
 				
- 00000052  33 F7			XOR		esi, edi		; esi = (((v0 << 4) + k2) XOR (v0 + sum) XOR ((v0 >> 5) + k3))
+ 00000052  33 F7			XOR		esi, edi		
 				
 				
  00000054  03 DE			ADD		ebx, esi
@@ -113,16 +113,16 @@ TEA.asm							     Page 1 - 1
 				
  00000071  8B F0			MOV		esi, eax
  00000073  C1 E6 04			SHL		esi, 4
- 00000076  03 35 00000008 R		ADD		esi, key[8]			; esi = ((v0 << 4) + k2)
+ 00000076  03 35 00000008 R		ADD		esi, key[8]			
 				
- 0000007C  8D 3C 10			LEA		edi, [eax + edx]	; edi = (v0 + sum)
- 0000007F  33 F7			XOR		esi, edi			; esi = ((v0 << 4) + k2) XOR (v0 + sum)
+ 0000007C  8D 3C 10			LEA		edi, [eax + edx]	
+ 0000007F  33 F7			XOR		esi, edi			
 				
  00000081  8B F8			MOV		edi, eax
  00000083  C1 EF 05			SHR		edi, 5
- 00000086  03 3D 0000000C R		ADD		edi, key[12]		; edi = ((v0 >> 5) + k3))
+ 00000086  03 3D 0000000C R		ADD		edi, key[12]		
 				
- 0000008C  33 F7			XOR		esi, edi			; esi = (((v0 << 4) + k2) XOR (v0 + sum) XOR ((vo >> 5) + k3))
+ 0000008C  33 F7			XOR		esi, edi			
  0000008E  2B DE			SUB		ebx, esi			; v1 decrypted
 				
 				; v0 = v0 - (((v1 << 4) + k0) XOR (v1 + sum) XOR ((v1 >> 5) + k1))
@@ -139,7 +139,7 @@ TEA.asm							     Page 1 - 1
  000000A5  03 3D 00000004 R		ADD		edi, key[4]
 				
  000000AB  33 F7			XOR		esi, edi
- 000000AD  2B C6			SUB		eax, esi
+ 000000AD  2B C6			SUB		eax, esi			; v0 decrypted
 				
 				
  000000AF  81 EA 9E3779B9		SUB		edx, DELTA
@@ -151,7 +151,7 @@ TEA.asm							     Page 1 - 1
  000000BA  E8 00000000 E   *	    call   ExitProcess
  000000BF			main ENDP
 				END main
-Microsoft (R) Macro Assembler Version 14.50.35728.0	    04/01/26 15:07:26
+Microsoft (R) Macro Assembler Version 14.50.35728.0	    04/01/26 15:09:10
 TEA.asm							     Symbols 2 - 1
 
 

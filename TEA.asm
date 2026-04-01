@@ -22,29 +22,29 @@ main PROC
 Encrypt:
 	ADD		edx, DELTA
 
-;------------------------- ((v1 << 4) + k0)
+
 	MOV		esi, ebx
 	SHL		esi, 4
-	ADD		esi, key[0]		; esi holds ((v1 <<4) + k0)
+	ADD		esi, key[0]		; esi = ((v1 <<4) + k0)
 
 
-;------------------------- (v1 + sum)
-	LEA		edi, [ebx + edx]
 
-;------------------------- (((v1 << 4) + k0) XOR (v1 + sum)
-	XOR		esi, edi		; esi holds above
+	LEA		edi, [ebx + edx] ; edi = (v1 + sum)
 
 
-;------------------------- ((v1 >> 5) + k1))
+	XOR		esi, edi		; esi = (((v1 << 4) + k0) XOR (v1 + sum)
+
+
+
 	MOV		edi, ebx
 	SHR		edi, 5
-	ADD		edi, key[4]		; edi holds above
+	ADD		edi, key[4]		; edi = ((v1 >> 5) + k1))
 
-;------------------------- (((v1 << 4) + k0) XOR (v1 + sum) XOR ((v1 >> 5) + k1))
-	XOR		esi, edi		; esi holds above
 
-;------------------------- v0 = v0 (eax) + above (esi)
-	ADD		eax, esi
+	XOR		esi, edi		; esi = (((v1 << 4) + k0) XOR (v1 + sum) XOR ((v1 >> 5) + k1))
+
+
+	ADD		eax, esi		; v0 = v0 (eax) + above (esi)
 
 
 

@@ -27,22 +27,15 @@ Encrypt:
 	SHL		esi, 4
 	ADD		esi, key[0]		
 
-
-
 	LEA		edi, [ebx + edx] 
-
-
 	XOR		esi, edi		
-
 
 
 	MOV		edi, ebx
 	SHR		edi, 5
 	ADD		edi, key[4]		
 
-
 	XOR		esi, edi		
-
 
 	ADD		eax, esi		; v0 encrypted
 
@@ -66,7 +59,7 @@ Encrypt:
 	XOR		esi, edi		
 
 
-	ADD		ebx, esi
+	ADD		ebx, esi		; v1 encrypted
 
 	DEC		ecx
 	JNZ		Encrypt
@@ -74,7 +67,7 @@ Encrypt:
 	MOV		v0, eax			; v0 now encrytped
 	MOV		v1, ebx			; v1 now encrypted
 
-
+;------- Decryption -------;
 
 
 

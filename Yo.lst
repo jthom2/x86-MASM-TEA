@@ -1,4 +1,4 @@
-Microsoft (R) Macro Assembler Version 14.50.35728.0	    04/01/26 15:09:10
+Microsoft (R) Macro Assembler Version 14.50.35728.0	    04/01/26 15:10:43
 TEA.asm							     Page 1 - 1
 
 
@@ -51,22 +51,15 @@ TEA.asm							     Page 1 - 1
  0000001A  C1 E6 04			SHL		esi, 4
  0000001D  03 35 00000000 R		ADD		esi, key[0]		
 				
-				
-				
  00000023  8D 3C 13			LEA		edi, [ebx + edx] 
-				
-				
  00000026  33 F7			XOR		esi, edi		
-				
 				
 				
  00000028  8B FB			MOV		edi, ebx
  0000002A  C1 EF 05			SHR		edi, 5
  0000002D  03 3D 00000004 R		ADD		edi, key[4]		
 				
-				
  00000033  33 F7			XOR		esi, edi		
-				
 				
  00000035  03 C6			ADD		eax, esi		; v0 encrypted
 				
@@ -90,7 +83,7 @@ TEA.asm							     Page 1 - 1
  00000052  33 F7			XOR		esi, edi		
 				
 				
- 00000054  03 DE			ADD		ebx, esi
+ 00000054  03 DE			ADD		ebx, esi		; v1 encrypted
 				
  00000056  49				DEC		ecx
  00000057  75 B9			JNZ		Encrypt
@@ -98,7 +91,7 @@ TEA.asm							     Page 1 - 1
  00000059  A3 00000010 R		MOV		v0, eax			; v0 now encrytped
  0000005E  89 1D 00000014 R		MOV		v1, ebx			; v1 now encrypted
 				
-				
+				;------- Decryption -------;
 				
 				
 				
@@ -151,7 +144,7 @@ TEA.asm							     Page 1 - 1
  000000BA  E8 00000000 E   *	    call   ExitProcess
  000000BF			main ENDP
 				END main
-Microsoft (R) Macro Assembler Version 14.50.35728.0	    04/01/26 15:09:10
+Microsoft (R) Macro Assembler Version 14.50.35728.0	    04/01/26 15:10:43
 TEA.asm							     Symbols 2 - 1
 
 

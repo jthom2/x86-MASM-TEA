@@ -1,4 +1,4 @@
-Microsoft (R) Macro Assembler Version 14.50.35728.0	    04/01/26 14:40:32
+Microsoft (R) Macro Assembler Version 14.50.35728.0	    04/01/26 14:44:04
 TEA.asm							     Page 1 - 1
 
 
@@ -78,7 +78,7 @@ TEA.asm							     Page 1 - 1
  0000003C  03 35 00000008 R		ADD		esi, key[8]		; esi = ((v0 << 4) + k2)
 				
 				
- 00000042  8D 3C 10			LEA		edi, [eax + edx]
+ 00000042  8D 3C 10			LEA		edi, [eax + edx]; edi = (v0 + sum)
 				
  00000045  33 F7			XOR		esi, edi		; esi = ((v0 << 4) + k2) XOR (v0 + sum)
 				
@@ -92,28 +92,24 @@ TEA.asm							     Page 1 - 1
 				
  00000054  03 DE			ADD		ebx, esi
 				
-				
-				
  00000056  49				DEC		ecx
  00000057  75 B9			JNZ		Encrypt
 				
- 00000059  A3 00000010 R		MOV		v0, eax
- 0000005E  89 1D 00000014 R		MOV		v1, ebx
+ 00000059  A3 00000010 R		MOV		v0, eax		; v0 now encrytped
+ 0000005E  89 1D 00000014 R		MOV		v1, ebx		; v1 now encrypted
 				
- 00000064  E8 00000000 E		Call WriteHex
- 00000069  E8 00000000 E		Call Crlf
 				
- 0000006E  A1 00000014 R		MOV		eax, v1
- 00000073  E8 00000000 E		Call WriteHex
+				
+				
 				
 				
 				
 				exit
- 00000078  6A 00	   *	    push   +000000000h
- 0000007A  E8 00000000 E   *	    call   ExitProcess
- 0000007F			main ENDP
+ 00000064  6A 00	   *	    push   +000000000h
+ 00000066  E8 00000000 E   *	    call   ExitProcess
+ 0000006B			main ENDP
 				END main
-Microsoft (R) Macro Assembler Version 14.50.35728.0	    04/01/26 14:40:32
+Microsoft (R) Macro Assembler Version 14.50.35728.0	    04/01/26 14:44:04
 TEA.asm							     Symbols 2 - 1
 
 
@@ -208,7 +204,7 @@ Segments and Groups:
 FLAT . . . . . . . . . . . . . .	GROUP
 STACK  . . . . . . . . . . . . .	32 Bit	 00001000 Para	  Stack	  'STACK'	 
 _DATA  . . . . . . . . . . . . .	32 Bit	 0000001C Para	  Public  'DATA'	
-_TEXT  . . . . . . . . . . . . .	32 Bit	 0000007F Para	  Public  'CODE'	
+_TEXT  . . . . . . . . . . . . .	32 Bit	 0000006B Para	  Public  'CODE'	
 
 
 Procedures, parameters, and locals:
@@ -315,7 +311,7 @@ WriteStackFrame  . . . . . . . .	P Near	 00000000 FLAT	Length= 00000000 External
 WriteString  . . . . . . . . . .	P Near	 00000000 FLAT	Length= 00000000 External STDCALL
 WriteToFile  . . . . . . . . . .	P Near	 00000000 FLAT	Length= 00000000 External STDCALL
 WriteWindowsMsg  . . . . . . . .	P Near	 00000000 FLAT	Length= 00000000 External STDCALL
-main . . . . . . . . . . . . . .	P Near	 00000000 _TEXT	Length= 0000007F Public STDCALL
+main . . . . . . . . . . . . . .	P Near	 00000000 _TEXT	Length= 0000006B Public STDCALL
   Encrypt  . . . . . . . . . . .	L Near	 00000012 _TEXT	
 printf . . . . . . . . . . . . .	P Near	 00000000 FLAT	Length= 00000000 External C
 scanf  . . . . . . . . . . . . .	P Near	 00000000 FLAT	Length= 00000000 External C

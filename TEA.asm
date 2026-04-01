@@ -54,7 +54,7 @@ Encrypt:
 	ADD		esi, key[8]		; esi = ((v0 << 4) + k2)
 
 
-	LEA		edi, [eax + edx]
+	LEA		edi, [eax + edx]; edi = (v0 + sum)
 
 	XOR		esi, edi		; esi = ((v0 << 4) + k2) XOR (v0 + sum)
 
@@ -68,19 +68,15 @@ Encrypt:
 
 	ADD		ebx, esi
 
-
-
 	DEC		ecx
 	JNZ		Encrypt
 
-	MOV		v0, eax
-	MOV		v1, ebx
+	MOV		v0, eax		; v0 now encrytped
+	MOV		v1, ebx		; v1 now encrypted
 
-	Call WriteHex
-	Call Crlf
 
-	MOV		eax, v1
-	Call WriteHex
+
+
 
 
 

@@ -7,7 +7,7 @@
     </Filter>
   </ItemGroup>
   <ItemGroup>
-    <MASM Include="JacksonThomas_HW8_4.asm">
+    <MASM Include="TEA.asm">
       <Filter>Source Files</Filter>
     </MASM>
   </ItemGroup>

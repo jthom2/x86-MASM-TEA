@@ -1,5 +1,5 @@
-Microsoft (R) Macro Assembler Version 14.50.35728.0	    04/01/26 13:44:48
-JacksonThomas_HW8_4.asm					     Page 1 - 1
+Microsoft (R) Macro Assembler Version 14.50.35728.0	    04/01/26 14:28:07
+TEA.asm							     Page 1 - 1
 
 
 				INCLUDE Irvine32.inc
@@ -31,22 +31,86 @@ JacksonThomas_HW8_4.asm					     Page 1 - 1
  00000014 9ABCDEF0			v1 DWORD 09ABCDEF0h
  00000018 00000000			sum DWORD 0
 				
- = 09E379B9				DELTA EQU 09E379B9h
+ = 9E3779B9				DELTA EQU 09E3779B9h
 				
  00000000			.code
  00000000			main PROC
 				
  00000000  A1 00000010 R		MOV		eax, v0
  00000005  8B 1D 00000014 R		MOV		ebx, v1
+ 0000000B  33 D2			XOR		edx, edx	; Init edx=0
+ 0000000D  B9 00000020			MOV		ecx, 32		; loop runs 32 times
+				
+				
+				;------------------ v0 = v0 + (((v1 << 4) + k0) XOR (v1 + sum) XOR ((v1 >> 5) + k1))
+ 00000012			Encrypt:
+ 00000012  81 C2 9E3779B9		ADD		edx, DELTA
+				
+				;------------------------- ((v1 << 4) + k0)
+ 00000018  8B F3			MOV		esi, ebx
+ 0000001A  C1 E6 04			SHL		esi, 4
+ 0000001D  03 35 00000000 R		ADD		esi, key[0]		; esi holds ((v1 <<4) + k0)
+				
+				
+				;------------------------- (v1 + sum)
+ 00000023  8B FB			MOV		edi, ebx
+ 00000025  03 FA			ADD		edi, edx		; edi holds (v1 + sum)
+				
+				;------------------------- (((v1 << 4) + k0) XOR (v1 + sum)
+ 00000027  33 F7			XOR		esi, edi		; esi holds above
+				
+				
+				;------------------------- ((v1 >> 5) + k1))
+ 00000029  8B FB			MOV		edi, ebx
+ 0000002B  C1 EF 05			SHR		edi, 5
+ 0000002E  03 3D 00000004 R		ADD		edi, key[4]		; edi holds above
+				
+				;------------------------- (((v1 << 4) + k0) XOR (v1 + sum) XOR ((v1 >> 5) + k1))
+ 00000034  33 F7			XOR		esi, edi		; esi holds above
+				
+				;------------------------- v0 = v0 (eax) + above (esi)
+ 00000036  03 C6			ADD		eax, esi
+				
+				
+				
+				; ------- v1 = v1 + (((v0 << 4) + k2) XOR (v0 + sum) XOR ((v0 >> 5) + k3))
+ 00000038  8B F0			MOV		esi, eax		; esi = v0
+ 0000003A  C1 E6 04			SHL		esi, 4			; esi = (v0 << 4)
+ 0000003D  03 35 00000008 R		ADD		esi, key[8]		; esi = ((v0 << 4) + k2)
+				
+				
+ 00000043  8B F8			MOV		edi, eax		; edi = v0
+ 00000045  03 FA			ADD		edi, edx		; edi = (v0 +sum)
+				
+ 00000047  33 F7			XOR		esi, edi		; esi = ((v0 << 4) + k2) XOR (v0 + sum)
+				
+				
+ 00000049  8B F8			MOV		edi, eax		; edi = eax
+ 0000004B  C1 EF 05			SHR		edi, 5			; edi = (v0 >> 5)
+ 0000004E  03 3D 0000000C R		ADD		edi, key[12]	; edi = ((v0 >> 5) + k3))
+				
+ 00000054  33 F7			XOR		esi, edi		; esi = (((v0 << 4) + k2) XOR (v0 + sum) XOR ((v0 >> 5) + k3))
+				
+				
+ 00000056  03 DE			ADD		ebx, esi
+				
+				
+				
+ 00000058  E2 B8			LOOP	Encrypt
+				
+ 0000005A  A3 00000010 R		MOV		v0, eax
+ 0000005F  89 1D 00000014 R		MOV		v1, ebx
+				
+ 00000065  E8 00000000 E		Call WriteHex
 				
 				
 				exit
- 0000000B  6A 00	   *	    push   +000000000h
- 0000000D  E8 00000000 E   *	    call   ExitProcess
- 00000012			main ENDP
+ 0000006A  6A 00	   *	    push   +000000000h
+ 0000006C  E8 00000000 E   *	    call   ExitProcess
+ 00000071			main ENDP
 				END main
-Microsoft (R) Macro Assembler Version 14.50.35728.0	    04/01/26 13:44:48
-JacksonThomas_HW8_4.asm					     Symbols 2 - 1
+Microsoft (R) Macro Assembler Version 14.50.35728.0	    04/01/26 14:28:07
+TEA.asm							     Symbols 2 - 1
 
 
 
@@ -140,7 +204,7 @@ Segments and Groups:
 FLAT . . . . . . . . . . . . . .	GROUP
 STACK  . . . . . . . . . . . . .	32 Bit	 00001000 Para	  Stack	  'STACK'	 
 _DATA  . . . . . . . . . . . . .	32 Bit	 0000001C Para	  Public  'DATA'	
-_TEXT  . . . . . . . . . . . . .	32 Bit	 00000012 Para	  Public  'CODE'	
+_TEXT  . . . . . . . . . . . . .	32 Bit	 00000071 Para	  Public  'CODE'	
 
 
 Procedures, parameters, and locals:
@@ -247,7 +311,8 @@ WriteStackFrame  . . . . . . . .	P Near	 00000000 FLAT	Length= 00000000 External
 WriteString  . . . . . . . . . .	P Near	 00000000 FLAT	Length= 00000000 External STDCALL
 WriteToFile  . . . . . . . . . .	P Near	 00000000 FLAT	Length= 00000000 External STDCALL
 WriteWindowsMsg  . . . . . . . .	P Near	 00000000 FLAT	Length= 00000000 External STDCALL
-main . . . . . . . . . . . . . .	P Near	 00000000 _TEXT	Length= 00000012 Public STDCALL
+main . . . . . . . . . . . . . .	P Near	 00000000 _TEXT	Length= 00000071 Public STDCALL
+  Encrypt  . . . . . . . . . . .	L Near	 00000012 _TEXT	
 printf . . . . . . . . . . . . .	P Near	 00000000 FLAT	Length= 00000000 External C
 scanf  . . . . . . . . . . . . .	P Near	 00000000 FLAT	Length= 00000000 External C
 wsprintfA  . . . . . . . . . . .	P Near	 00000000 FLAT	Length= 00000000 External C
@@ -272,7 +337,7 @@ CREATE_ALWAYS  . . . . . . . . .	Number	 00000002h
 CREATE_NEW . . . . . . . . . . .	Number	 00000001h   
 CTRL_MASK  . . . . . . . . . . .	Number	 0000000Ch   
 CreateFile . . . . . . . . . . .	Text   	 CreateFileA
-DELTA  . . . . . . . . . . . . .	Number	 09E379B9h   
+DELTA  . . . . . . . . . . . . .	Number	 9E3779B9h   
 DO_NOT_SHARE . . . . . . . . . .	Number	 00000000h   
 ENABLE_ECHO_INPUT  . . . . . . .	Number	 00000004h   
 ENABLE_LINE_INPUT  . . . . . . .	Number	 00000002h   

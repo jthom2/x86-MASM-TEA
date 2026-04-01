@@ -18,11 +18,11 @@ main PROC
 	MOV		ecx, 32		; loop runs 32 times
 
 
-;------------------ v0 = v0 + (((v1 << 4) + k0) XOR (v1 + sum) XOR ((v1 >> 5) + k1))
+
 Encrypt:
 	ADD		edx, DELTA
 
-
+;------------------ v0 = v0 + (((v1 << 4) + k0) XOR (v1 + sum) XOR ((v1 >> 5) + k1))
 	MOV		esi, ebx
 	SHL		esi, 4
 	ADD		esi, key[0]		; esi = ((v1 <<4) + k0)

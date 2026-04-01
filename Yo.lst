@@ -1,4 +1,4 @@
-Microsoft (R) Macro Assembler Version 14.50.35728.0	    04/01/26 14:39:28
+Microsoft (R) Macro Assembler Version 14.50.35728.0	    04/01/26 14:40:32
 TEA.asm							     Page 1 - 1
 
 
@@ -42,11 +42,11 @@ TEA.asm							     Page 1 - 1
  0000000D  B9 00000020			MOV		ecx, 32		; loop runs 32 times
 				
 				
-				;------------------ v0 = v0 + (((v1 << 4) + k0) XOR (v1 + sum) XOR ((v1 >> 5) + k1))
+				
  00000012			Encrypt:
  00000012  81 C2 9E3779B9		ADD		edx, DELTA
 				
-				
+				;------------------ v0 = v0 + (((v1 << 4) + k0) XOR (v1 + sum) XOR ((v1 >> 5) + k1))
  00000018  8B F3			MOV		esi, ebx
  0000001A  C1 E6 04			SHL		esi, 4
  0000001D  03 35 00000000 R		ADD		esi, key[0]		; esi = ((v1 <<4) + k0)
@@ -113,7 +113,7 @@ TEA.asm							     Page 1 - 1
  0000007A  E8 00000000 E   *	    call   ExitProcess
  0000007F			main ENDP
 				END main
-Microsoft (R) Macro Assembler Version 14.50.35728.0	    04/01/26 14:39:28
+Microsoft (R) Macro Assembler Version 14.50.35728.0	    04/01/26 14:40:32
 TEA.asm							     Symbols 2 - 1
 
 

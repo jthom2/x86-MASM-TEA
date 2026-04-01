@@ -29,8 +29,7 @@ Encrypt:
 
 
 ;------------------------- (v1 + sum)
-	MOV		edi, ebx
-	ADD		edi, edx		; edi holds (v1 + sum)
+	LEA		edi, [ebx + edx]
 
 ;------------------------- (((v1 << 4) + k0) XOR (v1 + sum)
 	XOR		esi, edi		; esi holds above
@@ -55,8 +54,7 @@ Encrypt:
 	ADD		esi, key[8]		; esi = ((v0 << 4) + k2)
 
 
-	MOV		edi, eax		; edi = v0
-	ADD		edi, edx		; edi = (v0 +sum)
+	LEA		edi, [eax + edx]
 
 	XOR		esi, edi		; esi = ((v0 << 4) + k2) XOR (v0 + sum)
 
@@ -72,12 +70,18 @@ Encrypt:
 
 
 
-	LOOP	Encrypt
+	DEC		ecx
+	JNZ		Encrypt
 
 	MOV		v0, eax
 	MOV		v1, ebx
 
 	Call WriteHex
+	Call Crlf
+
+	MOV		eax, v1
+	Call WriteHex
+
 
 
 exit

@@ -1,4 +1,4 @@
-Microsoft (R) Macro Assembler Version 14.50.35728.0	    04/01/26 14:28:07
+Microsoft (R) Macro Assembler Version 14.50.35728.0	    04/01/26 14:35:33
 TEA.asm							     Page 1 - 1
 
 
@@ -53,63 +53,67 @@ TEA.asm							     Page 1 - 1
 				
 				
 				;------------------------- (v1 + sum)
- 00000023  8B FB			MOV		edi, ebx
- 00000025  03 FA			ADD		edi, edx		; edi holds (v1 + sum)
+ 00000023  8D 3C 13			LEA		edi, [ebx + edx]
 				
 				;------------------------- (((v1 << 4) + k0) XOR (v1 + sum)
- 00000027  33 F7			XOR		esi, edi		; esi holds above
+ 00000026  33 F7			XOR		esi, edi		; esi holds above
 				
 				
 				;------------------------- ((v1 >> 5) + k1))
- 00000029  8B FB			MOV		edi, ebx
- 0000002B  C1 EF 05			SHR		edi, 5
- 0000002E  03 3D 00000004 R		ADD		edi, key[4]		; edi holds above
+ 00000028  8B FB			MOV		edi, ebx
+ 0000002A  C1 EF 05			SHR		edi, 5
+ 0000002D  03 3D 00000004 R		ADD		edi, key[4]		; edi holds above
 				
 				;------------------------- (((v1 << 4) + k0) XOR (v1 + sum) XOR ((v1 >> 5) + k1))
- 00000034  33 F7			XOR		esi, edi		; esi holds above
+ 00000033  33 F7			XOR		esi, edi		; esi holds above
 				
 				;------------------------- v0 = v0 (eax) + above (esi)
- 00000036  03 C6			ADD		eax, esi
+ 00000035  03 C6			ADD		eax, esi
 				
 				
 				
 				; ------- v1 = v1 + (((v0 << 4) + k2) XOR (v0 + sum) XOR ((v0 >> 5) + k3))
- 00000038  8B F0			MOV		esi, eax		; esi = v0
- 0000003A  C1 E6 04			SHL		esi, 4			; esi = (v0 << 4)
- 0000003D  03 35 00000008 R		ADD		esi, key[8]		; esi = ((v0 << 4) + k2)
+ 00000037  8B F0			MOV		esi, eax		; esi = v0
+ 00000039  C1 E6 04			SHL		esi, 4			; esi = (v0 << 4)
+ 0000003C  03 35 00000008 R		ADD		esi, key[8]		; esi = ((v0 << 4) + k2)
 				
 				
- 00000043  8B F8			MOV		edi, eax		; edi = v0
- 00000045  03 FA			ADD		edi, edx		; edi = (v0 +sum)
+ 00000042  8D 3C 10			LEA		edi, [eax + edx]
 				
- 00000047  33 F7			XOR		esi, edi		; esi = ((v0 << 4) + k2) XOR (v0 + sum)
-				
-				
- 00000049  8B F8			MOV		edi, eax		; edi = eax
- 0000004B  C1 EF 05			SHR		edi, 5			; edi = (v0 >> 5)
- 0000004E  03 3D 0000000C R		ADD		edi, key[12]	; edi = ((v0 >> 5) + k3))
-				
- 00000054  33 F7			XOR		esi, edi		; esi = (((v0 << 4) + k2) XOR (v0 + sum) XOR ((v0 >> 5) + k3))
+ 00000045  33 F7			XOR		esi, edi		; esi = ((v0 << 4) + k2) XOR (v0 + sum)
 				
 				
- 00000056  03 DE			ADD		ebx, esi
+ 00000047  8B F8			MOV		edi, eax		; edi = eax
+ 00000049  C1 EF 05			SHR		edi, 5			; edi = (v0 >> 5)
+ 0000004C  03 3D 0000000C R		ADD		edi, key[12]	; edi = ((v0 >> 5) + k3))
+				
+ 00000052  33 F7			XOR		esi, edi		; esi = (((v0 << 4) + k2) XOR (v0 + sum) XOR ((v0 >> 5) + k3))
+				
+				
+ 00000054  03 DE			ADD		ebx, esi
 				
 				
 				
- 00000058  E2 B8			LOOP	Encrypt
+ 00000056  49				DEC		ecx
+ 00000057  75 B9			JNZ		Encrypt
 				
- 0000005A  A3 00000010 R		MOV		v0, eax
- 0000005F  89 1D 00000014 R		MOV		v1, ebx
+ 00000059  A3 00000010 R		MOV		v0, eax
+ 0000005E  89 1D 00000014 R		MOV		v1, ebx
 				
- 00000065  E8 00000000 E		Call WriteHex
+ 00000064  E8 00000000 E		Call WriteHex
+ 00000069  E8 00000000 E		Call Crlf
+				
+ 0000006E  A1 00000014 R		MOV		eax, v1
+ 00000073  E8 00000000 E		Call WriteHex
+				
 				
 				
 				exit
- 0000006A  6A 00	   *	    push   +000000000h
- 0000006C  E8 00000000 E   *	    call   ExitProcess
- 00000071			main ENDP
+ 00000078  6A 00	   *	    push   +000000000h
+ 0000007A  E8 00000000 E   *	    call   ExitProcess
+ 0000007F			main ENDP
 				END main
-Microsoft (R) Macro Assembler Version 14.50.35728.0	    04/01/26 14:28:07
+Microsoft (R) Macro Assembler Version 14.50.35728.0	    04/01/26 14:35:33
 TEA.asm							     Symbols 2 - 1
 
 
@@ -204,7 +208,7 @@ Segments and Groups:
 FLAT . . . . . . . . . . . . . .	GROUP
 STACK  . . . . . . . . . . . . .	32 Bit	 00001000 Para	  Stack	  'STACK'	 
 _DATA  . . . . . . . . . . . . .	32 Bit	 0000001C Para	  Public  'DATA'	
-_TEXT  . . . . . . . . . . . . .	32 Bit	 00000071 Para	  Public  'CODE'	
+_TEXT  . . . . . . . . . . . . .	32 Bit	 0000007F Para	  Public  'CODE'	
 
 
 Procedures, parameters, and locals:
@@ -311,7 +315,7 @@ WriteStackFrame  . . . . . . . .	P Near	 00000000 FLAT	Length= 00000000 External
 WriteString  . . . . . . . . . .	P Near	 00000000 FLAT	Length= 00000000 External STDCALL
 WriteToFile  . . . . . . . . . .	P Near	 00000000 FLAT	Length= 00000000 External STDCALL
 WriteWindowsMsg  . . . . . . . .	P Near	 00000000 FLAT	Length= 00000000 External STDCALL
-main . . . . . . . . . . . . . .	P Near	 00000000 _TEXT	Length= 00000071 Public STDCALL
+main . . . . . . . . . . . . . .	P Near	 00000000 _TEXT	Length= 0000007F Public STDCALL
   Encrypt  . . . . . . . . . . .	L Near	 00000012 _TEXT	
 printf . . . . . . . . . . . . .	P Near	 00000000 FLAT	Length= 00000000 External C
 scanf  . . . . . . . . . . . . .	P Near	 00000000 FLAT	Length= 00000000 External C

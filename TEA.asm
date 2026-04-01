@@ -77,6 +77,20 @@ Encrypt:
 
 
 
+	MOV		edx, DELTA
+	SHL		edx, 5		; edx = Delta*32
+	MOV		ecx, 32
+
+
+Decrypt:
+
+
+	DEC		ecx
+	JNZ		Decrypt
+	
+
+
+
 
 
 

@@ -1,4 +1,4 @@
-Microsoft (R) Macro Assembler Version 14.50.35728.0	    04/01/26 14:44:04
+Microsoft (R) Macro Assembler Version 14.50.35728.0	    04/01/26 14:49:15
 TEA.asm							     Page 1 - 1
 
 
@@ -101,15 +101,29 @@ TEA.asm							     Page 1 - 1
 				
 				
 				
+ 00000064  BA 9E3779B9			MOV		edx, DELTA
+ 00000069  C1 E2 05			SHL		edx, 5		; edx = Delta*32
+ 0000006C  B9 00000020			MOV		ecx, 32
+				
+				
+ 00000071			Decrypt:
+				
+				
+ 00000071  49				DEC		ecx
+ 00000072  75 FD			JNZ		Decrypt
+					
+				
+				
+				
 				
 				
 				
 				exit
- 00000064  6A 00	   *	    push   +000000000h
- 00000066  E8 00000000 E   *	    call   ExitProcess
- 0000006B			main ENDP
+ 00000074  6A 00	   *	    push   +000000000h
+ 00000076  E8 00000000 E   *	    call   ExitProcess
+ 0000007B			main ENDP
 				END main
-Microsoft (R) Macro Assembler Version 14.50.35728.0	    04/01/26 14:44:04
+Microsoft (R) Macro Assembler Version 14.50.35728.0	    04/01/26 14:49:15
 TEA.asm							     Symbols 2 - 1
 
 
@@ -204,7 +218,7 @@ Segments and Groups:
 FLAT . . . . . . . . . . . . . .	GROUP
 STACK  . . . . . . . . . . . . .	32 Bit	 00001000 Para	  Stack	  'STACK'	 
 _DATA  . . . . . . . . . . . . .	32 Bit	 0000001C Para	  Public  'DATA'	
-_TEXT  . . . . . . . . . . . . .	32 Bit	 0000006B Para	  Public  'CODE'	
+_TEXT  . . . . . . . . . . . . .	32 Bit	 0000007B Para	  Public  'CODE'	
 
 
 Procedures, parameters, and locals:
@@ -311,8 +325,9 @@ WriteStackFrame  . . . . . . . .	P Near	 00000000 FLAT	Length= 00000000 External
 WriteString  . . . . . . . . . .	P Near	 00000000 FLAT	Length= 00000000 External STDCALL
 WriteToFile  . . . . . . . . . .	P Near	 00000000 FLAT	Length= 00000000 External STDCALL
 WriteWindowsMsg  . . . . . . . .	P Near	 00000000 FLAT	Length= 00000000 External STDCALL
-main . . . . . . . . . . . . . .	P Near	 00000000 _TEXT	Length= 0000006B Public STDCALL
+main . . . . . . . . . . . . . .	P Near	 00000000 _TEXT	Length= 0000007B Public STDCALL
   Encrypt  . . . . . . . . . . .	L Near	 00000012 _TEXT	
+  Decrypt  . . . . . . . . . . .	L Near	 00000071 _TEXT	
 printf . . . . . . . . . . . . .	P Near	 00000000 FLAT	Length= 00000000 External C
 scanf  . . . . . . . . . . . . .	P Near	 00000000 FLAT	Length= 00000000 External C
 wsprintfA  . . . . . . . . . . .	P Near	 00000000 FLAT	Length= 00000000 External C

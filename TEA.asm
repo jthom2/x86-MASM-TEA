@@ -71,29 +71,57 @@ Encrypt:
 	DEC		ecx
 	JNZ		Encrypt
 
-	MOV		v0, eax		; v0 now encrytped
-	MOV		v1, ebx		; v1 now encrypted
+	MOV		v0, eax			; v0 now encrytped
+	MOV		v1, ebx			; v1 now encrypted
+
+
 
 
 
 
 	MOV		edx, DELTA
-	SHL		edx, 5		; edx = Delta*32
+	SHL		edx, 5			; edx = Delta*32
 	MOV		ecx, 32
 
 
 Decrypt:
+; v1 = v1 - (((v0 << 4) + k2) XOR (v0 + sum) XOR ((vo >> 5) + k3))
 
+	MOV		esi, eax
+	SHL		esi, 4
+	ADD		esi, key[8]			; esi = ((v0 << 4) + k2)
+
+	LEA		edi, [eax + edx]	; edi = (v0 + sum)
+	XOR		esi, edi			; esi = ((v0 << 4) + k2) XOR (v0 + sum)
+
+	MOV		edi, eax
+	SHR		edi, 5
+	ADD		edi, key[12]		; edi = ((v0 >> 5) + k3))
+
+	XOR		esi, edi			; esi = (((v0 << 4) + k2) XOR (v0 + sum) XOR ((vo >> 5) + k3))
+	SUB		ebx, esi			; v1 decrypted
+
+; v0 = v0 - (((v1 << 4) + k0) XOR (v1 + sum) XOR ((v1 >> 5) + k1))
+	
+	MOV		esi, ebx
+	SHL		esi, 4
+	ADD		esi, key[0]
+
+	LEA		edi, [ebx + edx]
+	XOR		esi, edi
+
+	MOV		edi, ebx
+	SHR		edi, 5
+	ADD		edi, key[4]
+
+	XOR		esi, edi
+	SUB		eax, esi
+
+
+	SUB		edx, DELTA
 
 	DEC		ecx
 	JNZ		Decrypt
-	
-
-
-
-
-
-
 exit
 main ENDP
 END main
